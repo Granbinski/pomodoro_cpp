@@ -4,6 +4,29 @@
 
 using namespace std;
 
+void countdown(int &timeMin)
+{
+ int timeSec = timeMin * 60;
+ auto start = chrono::high_resolution_clock::now();
+
+ while (timeSec > 0)
+ {
+  auto current = chrono::high_resolution_clock::now();
+  chrono::duration<double, milli> elapsed = current - start;
+
+  timeSec--;
+  int elapsedSec = elapsed.count() / 1000;
+
+  int min = timeSec / 60;
+  int sec = timeSec % 60;
+
+  cout << min << ":" << sec << "." << elapsedSec % 1000 << "   \r";
+
+  // Ajuste o valor abaixo para aumentar ou diminuir a velocidade
+  this_thread::sleep_for(chrono::milliseconds(500)); // Delay de 500 milissegundos (0.5 segundos)
+ }
+}
+
 int main()
 {
  int focusTimeMin, breakTimeMin;
@@ -16,43 +39,11 @@ int main()
 
  while (true)
  {
-  int focusTimeSec = focusTimeMin * 60;
-  auto start = chrono::high_resolution_clock::now();
-
-  while (focusTimeSec > 0)
-  {
-   auto current = chrono::high_resolution_clock::now();
-   chrono::duration<double, milli> elapsed = current - start;
-
-   focusTimeSec--;
-   int elapsedSec = elapsed.count() / 1000;
-
-   int min = focusTimeSec / 60;
-   int sec = focusTimeSec % 60;
-
-   cout << min << ":" << sec << "." << elapsedSec % 1000 << "   \r";
-   this_thread::sleep_for(chrono::milliseconds(100));
-  }
-
-  int breakTimeSec = breakTimeMin * 60;
+  cout << "\nFoco iniciado!" << endl;
+  countdown(focusTimeMin);
 
   cout << "\nIniciando pausa...\n";
-
-  start = chrono::high_resolution_clock::now();
-  while (breakTimeSec > 0)
-  {
-   auto current = chrono::high_resolution_clock::now();
-   chrono::duration<double, milli> elapsed = current - start;
-
-   breakTimeSec--;
-   int elapsedSec = elapsed.count() / 1000;
-
-   int min = breakTimeSec / 60;
-   int sec = breakTimeSec % 60;
-
-   cout << min << ":" << sec << "." << elapsedSec % 1000 << "   \r";
-   this_thread::sleep_for(chrono::milliseconds(100));
-  }
+  countdown(breakTimeMin);
 
   cout << "\nFoco novamente!\n";
  }
